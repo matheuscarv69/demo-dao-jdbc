@@ -43,6 +43,8 @@ public class DepartmentDaoJDBC implements DepartmentDao {
                 }
 
                 DB.closeResultSet(rs);
+            }else {
+                throw new DbException("Unexpected error! No rows affected!");
             }
 
         } catch (SQLException e) {
@@ -125,6 +127,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
             throw new DbException(e.getMessage());
         } finally {
             DB.closeStatement(st);
+            DB.closeResultSet(rs);
         }
 
     }
