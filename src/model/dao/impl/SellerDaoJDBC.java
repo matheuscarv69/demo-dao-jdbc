@@ -22,13 +22,6 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void insert(Seller obj) {
-        /*
-        INSERT INTO seller
-        (Name, Email, BirthDate, BaseSalary, DepartmentId)
-        VALUES
-        (?, ?, ?, ?, ?)
-        */
-
         PreparedStatement st = null;
 
         try {
@@ -36,7 +29,7 @@ public class SellerDaoJDBC implements SellerDao {
                     "INSERT INTO seller "
                             + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
                             + "VALUES "
-                            + "(?, ?, ?, ?, ?) "
+                            + "(?, ?, ?, ?, ?)"
                     , Statement.RETURN_GENERATED_KEYS);
 
             st.setString(1, obj.getName());
@@ -49,7 +42,7 @@ public class SellerDaoJDBC implements SellerDao {
 
             if (rowsAffected > 0) {
                 ResultSet rs = st.getGeneratedKeys();
-
+                // rs[0] por padrão
                 if (rs.next()) {
                     int id = rs.getInt(1);
                     obj.setId(id);
@@ -71,7 +64,29 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void update(Seller obj) {
+        PreparedStatement st = null;
 
+        try {
+            st = conn.prepareStatement(
+                    "UPDATE seller "
+                            + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                            + "WHERE Id = ? "
+            );
+
+            st.setString(1, obj.getName());
+            st.setString(2, obj.getEmail());
+            st.setDate(3, new Date(obj.getBirthDate().getTime()));
+            st.setDouble(4, obj.getBaseSalary());
+            st.setInt(5, obj.getDepartment().getId());
+            st.setInt(6, obj.getId());
+
+            st.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+        }
     }
 
     @Override
