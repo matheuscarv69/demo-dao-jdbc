@@ -35,10 +35,10 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
             int rowsAffected = st.executeUpdate();
 
-            if(rowsAffected > 0){
+            if (rowsAffected > 0) {
                 ResultSet rs = st.getGeneratedKeys();
 
-                if(rs.next()){
+                if (rs.next()) {
                     obj.setId(rs.getInt(1));
                 }
 
@@ -54,6 +54,24 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public void update(Department obj) {
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement(
+                    "UPDATE department "
+                            + "SET Name = ?"
+                            + "WHERE Id = ?"
+            );
+
+            st.setString(1, obj.getName());
+            st.setInt(2, obj.getId());
+
+            st.executeUpdate();
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeStatement(st);
+        }
 
     }
 
@@ -110,6 +128,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
             st = conn.prepareStatement(
                     "SELECT department.* "
                             + "FROM department "
+                            + "ORDER BY Id"
             );
 
             rs = st.executeQuery();

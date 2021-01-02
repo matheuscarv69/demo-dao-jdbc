@@ -31,18 +31,18 @@ public class Program2 {
         Department newDep = new Department(null, "Música");
         depDao.insert(newDep);
         System.out.println("Inserted! New id = " + newDep.getId());
-//
-//        System.out.println("\n=== TEST 5 : seller update ===");
-//        seller = sellerDao.findById(1);
-//        seller.setName("Martha Wayne");
-//        sellerDao.update(seller);
-//        System.out.println("Updated completed");
-//
-//        System.out.println("\n=== TEST 6 : seller delete ===");
-//        System.out.print("Enter id for delete test: ");
-//        int id = sc.nextInt();
-//        sellerDao.deleteById(id);
-//        System.out.println("Delete completed");
+
+        System.out.println("\n=== TEST 4 : Department update ===");
+        dep = depDao.findById(8);
+        dep.setName("Informática");
+        depDao.update(dep);
+        System.out.println("Updated completed");
+
+        System.out.println("\n=== TEST 6 : Department delete ===");
+        System.out.print("Enter id for delete test: ");
+        int id = sc.nextInt();
+        depDao.deleteById(id);
+        System.out.println("Delete completed");
 
         sc.close();
     }
